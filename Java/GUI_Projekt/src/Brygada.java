@@ -5,7 +5,7 @@ public class Brygada {
     private Brygadzista brygadzista;
     private static List<Osoba> pracownicy = new ArrayList<>();
     private int maksymalnaIloscPracownikow;
-    private int iloscMachniecLopataBrygady;
+    private static int iloscMachniecLopataBrygady;
 
     public int ileArchitektow(){
         int ileArch =0;
@@ -30,6 +30,23 @@ public class Brygada {
 
     public static List<Osoba> getPracownicy(){
         return pracownicy;
+    }
+
+    public static List<Kopacz> getKopaczZPracowników(){ // metoda potrzebna do sprawnego sprawdzania zdolnych do pracy kopaczy
+        List<Kopacz> curenntKopacze = new ArrayList<>();
+        for(Osoba el : pracownicy){
+            if(el.Stanowisko.equals(Specjalizacja.Kopacz))
+                curenntKopacze.add((Kopacz) el);
+        }
+        return curenntKopacze;
+    }
+
+    public synchronized void setIloscMachniecLopataBrygady() {
+        iloscMachniecLopataBrygady++;
+    }
+
+    public int getIloscMachniecLopataBrygady() {
+        return iloscMachniecLopataBrygady;
     }
 
 }

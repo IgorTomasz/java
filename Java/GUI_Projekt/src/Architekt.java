@@ -1,9 +1,9 @@
 public class Architekt extends Osoba implements IPracownik{
-    private String Specjalizacja="Architekt";
+    private Specjalizacja specjalizacja;
 
-    Architekt(String imie, String nazwisko, String pesel, int nrTelefonu, float waga) {
-        super(imie, nazwisko, pesel, nrTelefonu, waga);
-        super.Stanowisko = this.Specjalizacja;
+    Architekt(String imie, String nazwisko, String pesel, int nrTelefonu, int waga) {
+        super(imie, nazwisko, pesel, nrTelefonu, waga, Specjalizacja.Architekt);
+        this.specjalizacja = Specjalizacja.Architekt;
     }
 
     @Override
