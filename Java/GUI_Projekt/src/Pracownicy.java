@@ -2,6 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pracownicy {
+
+
+
+
     public static List<String> listaKopaczy = new ArrayList<>(); // tworzenie listy przechowujacej pesele
 
     public boolean czyPeselUnikalny(String pesel){

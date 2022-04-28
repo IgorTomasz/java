@@ -2,7 +2,7 @@
 public abstract class Osoba implements Comparable<Osoba>{
     protected String imie;
     private String nazwisko;
-    private String pesel;
+    protected String pesel;
     private int nrTelefonu;
     private int waga;
     protected Specjalizacja Stanowisko;
@@ -23,7 +23,7 @@ public abstract class Osoba implements Comparable<Osoba>{
             try {
                 throw new nieUnikalnyPeselException(pesel);
             }catch (nieUnikalnyPeselException e){
-                this.pesel = "NieUnikalnyPesel";
+                this.pesel = null;
                 pracownicy.deletePerson(this);
             }
         }

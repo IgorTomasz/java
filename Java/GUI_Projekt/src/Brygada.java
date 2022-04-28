@@ -1,34 +1,49 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Brygada {
     private Brygadzista brygadzista;
     private static List<Osoba> pracownicy = new ArrayList<>();
-    private int maksymalnaIloscPracownikow;
+    protected int maksymalnaIloscPracownikow;
     private static int iloscMachniecLopataBrygady;
+
+    Brygada(int maxIlosc){
+        this.maksymalnaIloscPracownikow=maxIlosc;
+    }
 
     public int ileArchitektow(){
         int ileArch =0;
         for(Osoba el : pracownicy){
-            if(el.Stanowisko.equals("Architekt"));
+            if(el.Stanowisko.equals(Specjalizacja.Architekt)) { // sprawdzenie czy obiekt nie jest nullem
                 ileArch++;
+            }
         }
         return ileArch;
     }
+
     public boolean czyPelnaBrygada(){
         return maksymalnaIloscPracownikow==pracownicy.size();
     }
+
     public void dodajPracownika(Osoba pracownikDoDodania){
-        pracownicy.add(pracownikDoDodania);
+        if(!Objects.isNull(pracownikDoDodania)) {
+            pracownicy.add(pracownikDoDodania);
+        }
     }
+
     public void dodajPracownikow(List<Osoba> pracownicyDoDodania){
-        pracownicy.addAll(pracownicyDoDodania);
+        for(Osoba el : pracownicyDoDodania) {
+            if(!Objects.isNull(el)) {
+                pracownicy.add(el);
+            }
+        }
     }
     public void setBrygadzista(Brygadzista brygadzista){
         this.brygadzista = brygadzista;
     }
 
-    public static List<Osoba> getPracownicy(){
+    public List<Osoba> getPracownicy(){
         return pracownicy;
     }
 
@@ -48,5 +63,6 @@ public class Brygada {
     public int getIloscMachniecLopataBrygady() {
         return iloscMachniecLopataBrygady;
     }
+
 
 }

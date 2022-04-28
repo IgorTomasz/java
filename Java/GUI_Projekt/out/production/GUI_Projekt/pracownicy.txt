@@ -1,0 +1,20 @@
+Specjalizacja.Brygadzista, "Jan", "Janowski", "11111111110", 111111111, 95, "Kozak"
+Specjalizacja.Kopacz, "Pawel", "Pawlowski", "11111111111", 111111111, 95
+Specjalizacja.Architekt, "Karol", "Karolowski", "11111111111", 111111111, 95
+Specjalizacja.Kopacz, "Piotr", "Piotrowski", "11111111113", 111111111, 95
+Specjalizacja.Kopacz, "Maciej", "Maciejowski", "11111111114", 111111111, 95
+Specjalizacja.Kopacz, "Franciszek", "Franciszewski", "11111111115", 111111111, 95
+Specjalizacja.Kopacz, "Pawel", "Pawolowski", "11111111116", 111111111, 95
+Specjalizacja.Kopacz, "Janusz", "Januszewski", "11111111117", 111111111, 95
+Specjalizacja.Kopacz, "Arek", "Arkowski", "11111111118", 111111111, 95
+Specjalizacja.Kopacz, "Patryk", "Patrykowski", "11111111119", 111111111, 95
+Specjalizacja.Kopacz, "Kornel", "Kornelowski", "11111111120", 111111111, 95
+Specjalizacja.Kopacz, "Antoni", "Antonowski", "11111111121", 111111111, 95
+Specjalizacja.Kopacz, "Bartosz", "Bartoszewski", "11111111122", 111111111, 95
+Specjalizacja.Kopacz, "Blazej", "Blazejowski", "11111111123", 111111111, 95
+Specjalizacja.Kopacz, "Damian", "Damianowski", "11111111124", 111111111, 95
+Specjalizacja.Kopacz, "Edward", "Edwardowski", "11111111125", 111111111, 95
+Specjalizacja.Kopacz, "Filip", "Filipowski", "11111111126", 111111111, 95
+Specjalizacja.Kopacz, "Gabriel", "Gabrielowski", "11111111127", 111111111, 95
+Specjalizacja.Kopacz, "Hubert", "Hubertowski", "11111111128", 111111111, 95
+Specjalizacja.Kopacz, "Ignacy", "Ignacowski", "11111111129", 111111111, 95

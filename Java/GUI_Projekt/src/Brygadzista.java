@@ -3,15 +3,16 @@ import java.util.List;
 
 public class Brygadzista extends Kopacz implements IPracownik{
     private String pseudonim;
-    private int dlugoscZmiany=10;
+    private int dlugoscZmiany=5;
     private String brygada;
     private Thread sprawdzanieCzyZdolna;
 
-    Brygadzista(String imie, String nazwisko, String pesel, int nrTelefonu, int waga) {
+    Brygadzista(String imie, String nazwisko, String pesel, int nrTelefonu, int waga, String pseudonim) {
         super(imie, nazwisko, pesel, nrTelefonu, waga , Specjalizacja.Brygadzista);
+        this.pseudonim=pseudonim;
     }
 
-    public void sprawdzCzyBrygadaNiezdolnaDoPracy(){
+    public synchronized void sprawdzCzyBrygadaNiezdolnaDoPracy(){
 
         sprawdzanieCzyZdolna = new Thread(()->{
             List<Boolean> listaSprawnosci = new ArrayList<>();
@@ -19,13 +20,16 @@ public class Brygadzista extends Kopacz implements IPracownik{
                 for(int i=0; i<dlugoscZmiany;i++) {
                     for (Kopacz el : Brygada.getKopaczZPracowników()) { // przechodzenie po kazdym elemencie typu kopacz
                                                                         // w celu sprawdzenia czy zdolny do pracy
-                        if (el.isCzyZdolnyDoPracy())
+                        if (el.isCzyZdolnyDoPracy()) {
                             listaSprawnosci.add(true);
+                        }
 
-                            if(listaSprawnosci.isEmpty()) // sprawdzenie listy w celu stworzenia stosownego komunikatu
-                                komunikat=false;
-                            else
-                                komunikat=true;
+                            if(listaSprawnosci.isEmpty()) { // sprawdzenie listy w celu stworzenia stosownego komunikatu
+                                komunikat = false;
+                            }
+                            else {
+                                komunikat = true;
+                            }
                         listaSprawnosci.clear(); //czyszczenie listy po sprawdzeniu
                     }
                     try {
@@ -57,7 +61,10 @@ public class Brygadzista extends Kopacz implements IPracownik{
 
     @Override
     public String powiedzCoRobisz() {
-        return null;
+        if(sprawdzanieCzyZdolna.isAlive()){
+            return "Sprawdzam pracownikow";
+        }else
+        return "Nic nie robie";
     }
 
     @Override

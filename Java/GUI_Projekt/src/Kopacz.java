@@ -1,11 +1,14 @@
+import javax.swing.plaf.IconUIResource;
+
 public class Kopacz extends Osoba implements IPracownik{
     private int iloscMachniecLopata;
     private static boolean czyZdolnyDoPracy = true;
     private Thread kopanie;
-    private Brygada brygada = new Brygada();
+    private Brygada brygada = new Brygada(0);
 
     Kopacz(String imie, String nazwisko, String pesel, int nrTelefonu, int waga) {
         super(imie, nazwisko, pesel, nrTelefonu, waga, Specjalizacja.Kopacz);
+
     }
 
     Kopacz(String imie, String nazwisko, String pesel, int nrTelefonu, int waga, Specjalizacja stanowisko) {
@@ -63,12 +66,16 @@ public class Kopacz extends Osoba implements IPracownik{
 
     @Override
     public String powiedzCoRobisz() {
-        return null;
+        if(kopanie.isAlive()){
+            return "Kopie";
+        }else
+        return "Nic nie robie";
     }
 
     @Override
     public void zakonczDzialanie() {
         this.kopanie.interrupt();
+        System.out.println("Przerwano kopanie");
     }
 
     @Override
