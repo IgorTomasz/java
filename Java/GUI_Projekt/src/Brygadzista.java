@@ -6,6 +6,7 @@ public class Brygadzista extends Kopacz implements IPracownik{
     private int dlugoscZmiany=5;
     private String brygada;
     private Thread sprawdzanieCzyZdolna;
+    boolean komunikat = true;
 
     Brygadzista(String imie, String nazwisko, String pesel, int nrTelefonu, int waga, String pseudonim) {
         super(imie, nazwisko, pesel, nrTelefonu, waga , Specjalizacja.Brygadzista);
@@ -16,7 +17,7 @@ public class Brygadzista extends Kopacz implements IPracownik{
 
         sprawdzanieCzyZdolna = new Thread(()->{
             List<Boolean> listaSprawnosci = new ArrayList<>();
-            boolean komunikat = true;
+
                 for(int i=0; i<dlugoscZmiany;i++) {
                     for (Kopacz el : Brygada.getKopaczZPracowników()) { // przechodzenie po kazdym elemencie typu kopacz
                                                                         // w celu sprawdzenia czy zdolny do pracy
@@ -25,10 +26,10 @@ public class Brygadzista extends Kopacz implements IPracownik{
                         }
 
                             if(listaSprawnosci.isEmpty()) { // sprawdzenie listy w celu stworzenia stosownego komunikatu
-                                komunikat = false;
+                                setKomunikat(false);
                             }
                             else {
-                                komunikat = true;
+                                setKomunikat(true);
                             }
                         listaSprawnosci.clear(); //czyszczenie listy po sprawdzeniu
                     }
@@ -52,6 +53,10 @@ public class Brygadzista extends Kopacz implements IPracownik{
     @Override
     public int pobierzPensje() {
         return 4350;
+    }
+
+    public synchronized void setKomunikat(boolean decision){
+        komunikat=decision;
     }
 
     @Override
