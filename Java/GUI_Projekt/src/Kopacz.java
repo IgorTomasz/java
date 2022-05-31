@@ -16,8 +16,8 @@ public class Kopacz extends Osoba implements IPracownik{
     }
 
     public synchronized void kop(){
-        int los = (int)(Math.random()*95+5); // losowanie ilosci machniec
-        int jedenProcent = (int)(Math.random()*99+1); // losowanie liczby odpowiadajacej za 1% na zlamanie lopaty podczas kopania
+        int los = (int)((Math.random()*95)+5); // losowanie ilosci machniec
+        int jedenProcent = (int)((Math.random()*99)+1); // losowanie liczby odpowiadajacej za 1% na zlamanie lopaty podczas kopania
 
         //tworzenie wątku odpowiadającego za kopanie
         kopanie = new Thread(()-> {
