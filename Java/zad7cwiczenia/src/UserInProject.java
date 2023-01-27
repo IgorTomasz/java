@@ -10,6 +10,7 @@ public class UserInProject {
     protected User user;
     protected Project project;
     private User addedBy;
+    private int status;
     private String startWorkDay;
     private String endWorkDate;
     private User userClass;
@@ -17,10 +18,11 @@ public class UserInProject {
     private  CommentInProject commentInProject;
     protected List<UserInProject> userInProjectList = new ArrayList<>();
 
-    UserInProject(User user, Project project, User addedBy){
+    UserInProject(User user, Project project, User addedBy, int status){
         this.user=user;
         this.project=project;
         this.addedBy=addedBy;
+        this.status=status;
     }
     UserInProject(User userClass, Project projectClass,CommentInProject commentInProject){
         this.userClass=userClass;
@@ -32,7 +34,7 @@ public class UserInProject {
     public void getUserInProject(){
         BufferedReader br = null;
         try{
-            File file = new File("D:\\Java\\zad7cwiczenia-20220516T190306Z-001\\zad7cwiczenia\\src\\data.txt");
+            File file = new File(".\\src\\data.txt");
             br = new BufferedReader(new FileReader(file));
             String line1 = null;
 
@@ -49,15 +51,24 @@ public class UserInProject {
                     String allUsers = parts1[5].trim();
 
                             String[] parts2 = allUsers.split("%");
-                            String user1 = parts2[0].trim();
+                            String[] user1AndStatus = parts2[0].split("\\.");
+                            String user1 = user1AndStatus[0].trim();
+                            int user1Status = Integer.parseInt(user1AndStatus[1].trim());
                             String user2=null;
+                            int user2Status=0;
                             try {
-                                 user2= parts2[1].trim();
-                            }catch (Exception e){}
+                                String[] user2AndStatus = parts2[1].split("\\.");
+                                user2= user2AndStatus[0].trim();
+                                user2Status=Integer.parseInt(user2AndStatus[1].trim());
+                            }catch (Exception e){
 
-                        this.userInProjectList.add(new UserInProject(userClass.getSpecifiedUser(user1),projectClass.getSpecifiedProject(projectName),userClass.getSpecifiedUser(addedBy)));
+                            }
+
+
+
+                        this.userInProjectList.add(new UserInProject(userClass.getSpecifiedUser(user1),projectClass.getSpecifiedProject(projectName),userClass.getSpecifiedUser(addedBy),user1Status));
                             if(user2!=null) {
-                                this.userInProjectList.add(new UserInProject(userClass.getSpecifiedUser(user2), projectClass.getSpecifiedProject(projectName), userClass.getSpecifiedUser(addedBy)));
+                                this.userInProjectList.add(new UserInProject(userClass.getSpecifiedUser(user2), projectClass.getSpecifiedProject(projectName), userClass.getSpecifiedUser(addedBy),user2Status));
                             }
                     }catch (Exception e){
                         e.printStackTrace();
@@ -67,7 +78,7 @@ public class UserInProject {
                 }
             }
         }catch (Exception e){
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,"Nie znaleziono pliku z danymi","Ostrzeżenie",JOptionPane.INFORMATION_MESSAGE);
         }finally {
             if(br != null){
                 try{
@@ -133,6 +144,31 @@ public class UserInProject {
         }
     }
 
+    public void addUserToList(User user, Project project, User addedBy){
+        userInProjectList.add(new UserInProject(user, project, addedBy,0));
+
+    }
+
+    public UserInProject getUserInProject(String login, Project project){
+        UserInProject uip = null;
+        for(UserInProject el : userInProjectList){
+            if(el.project==project){
+                if (el.user.getLogin().equals(login)){
+                    uip=el;
+                }
+            }
+        }
+        return uip;
+    }
+
+    public void setStatus(int status){
+        this.status=status;
+    }
+
+    public int getStatus(){
+        return status;
+    }
+
     public void addUserInProject(String userName, String projectName){
         boolean s = false;
         User ab = null;
@@ -148,9 +184,9 @@ public class UserInProject {
             }
         }
         if(s) {
-            userInProjectList.add(new UserInProject(userClass.getSpecifiedUser(userName), projectClass.getSpecifiedProject(projectName), ab));
+            userInProjectList.add(new UserInProject(userClass.getSpecifiedUser(userName), projectClass.getSpecifiedProject(projectName), ab,0));
         }else{
-            JOptionPane.showMessageDialog(null, "Nie znaleziono użytkownika", "Ostrzeżenie", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Nie znaleziono użytkownika lub lista użytkowników jest pełna", "Ostrzeżenie", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 

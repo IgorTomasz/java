@@ -16,6 +16,7 @@ public class MainScreenDev extends JFrame {
     private UserInProject userInProject;
     private ProjectDev projectDev;
     protected SaveToFile saveToFile;
+    protected static JLabel timerLabel = new JLabel("Czas sesji: 60");
 
 
     private JTable commentsPane;
@@ -27,7 +28,7 @@ public class MainScreenDev extends JFrame {
         this.project = new Project(user);
         this.commentInProject= new CommentInProject(user,project);
         this.userInProject = new UserInProject(user,project,commentInProject);
-        this.saveToFile = new SaveToFile(commentInProject,user,project);
+        this.saveToFile = new SaveToFile(commentInProject,user,project,userInProject);
         this.projectDev = new ProjectDev(user,l,login,this,project,commentInProject,userInProject,saveToFile);
 
         MainScreenDev();
@@ -62,21 +63,21 @@ public class MainScreenDev extends JFrame {
         itemMenu5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                user.setVisible(true);
+                Timer.resetCounter();
+                user.GetWindow();
             }
         });
         JMenuItem itemMenu6 = new JMenuItem("Wyloguj");
         itemMenu6.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Timer.stopThread();
                 saveToFile.addToFile();
                 l.setVisible(true);
                 l.loginText.setText("");
                 l.passwordText.setText("");
                 setVisible(false);
                 dispose();
-                user.setVisible(false);
-                user.dispose();
             }
         });
         menu1.add(itemMenu2);
@@ -107,7 +108,7 @@ public class MainScreenDev extends JFrame {
         jpanelRightDownMain.setBorder(BorderFactory.createEmptyBorder(0,0,10,20));
 
 
-        JLabel projectsLabelMain = new JLabel("Aktywne projekty");
+        JLabel projectsLabelMain = new JLabel("Twoje projekty");
         JLabel teamLabelMain = new JLabel("Zespół");
         JLabel commentsLabelMain = new JLabel("Komentarze");
         JButton footer = new JButton(login);
@@ -116,11 +117,11 @@ public class MainScreenDev extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //setEnabled(false);
-                user.setVisible(true);
+                user.GetWindow();
             }
         });
 
-        JList<String> projectsList = new JList<>(project.getProjectByStatusAndUser("AKTYWNY", login));
+        JList<String> projectsList = new JList<>(project.getProjectByStatusAndUser(login));
         projectsList.setPreferredSize(new Dimension(200,450));
         projectsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -138,6 +139,7 @@ public class MainScreenDev extends JFrame {
                         projectDev.setProjectName(val.toString());
                         projectDev.setStatusArea(project.getStatus(val.toString()).toString());
                     }
+                    Timer.resetCounter();
                     projectDev.setVisible(true);
                 }
             }
@@ -191,7 +193,11 @@ public class MainScreenDev extends JFrame {
         commentsPane.setPreferredSize(new Dimension(600,300));
         commentsPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-
+        MouseListeners listeners = new MouseListeners();
+        addMouseListener(listeners);
+        projectsList.addMouseListener(listeners);
+        teamPane.addMouseListener(listeners);
+        commentsPane.addMouseListener(listeners);
 
         commentsPane.addMouseListener(new MouseAdapter() {
             @Override
@@ -243,6 +249,9 @@ public class MainScreenDev extends JFrame {
         jpanelRightMain.add(jpanelRightDownMain);
 
         jpanelFootMain.add(footer, BorderLayout.EAST);
+        jpanelFootMain.add(timerLabel,BorderLayout.WEST);
+
+        Timer.TimerThread(saveToFile,l,user);
 
         jpanelMain.add(jpanelLeftMain, BorderLayout.LINE_START);
         jpanelMain.add(jpanelRightMain, BorderLayout.CENTER);
@@ -268,3 +277,4 @@ public class MainScreenDev extends JFrame {
 
 
 }
+

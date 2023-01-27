@@ -15,14 +15,15 @@ public class ProjectManager extends JFrame {
         public boolean isCellEditable(int row, int column) {
             return false;
         }
-    };;
+    };
+    protected static JLabel timerLabel = new JLabel("Czas sesji: 60");
 
 
     private UserInProject userInProject;
     private CommentInProject commentInProject;
     private Project project;
     private LogInWindow l;
-    private AddUser addUser;
+    //private AddUser addUser;
 
 
     ProjectManager(User user, LogInWindow l, String login, MainScreen mainScreen, Project project,CommentInProject commentInProject, UserInProject userInProject, SaveToFile saveToFile, Pass pass){
@@ -69,10 +70,17 @@ public class ProjectManager extends JFrame {
         JMenu menu2 = new JMenu("Uzytkownicy");
         JMenu menu3 = new JMenu("Konto");
         JMenuItem itemMenu1 = new JMenuItem("Dodaj projekt");
+        itemMenu1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainScreen.addProject();
+            }
+        });
         JMenuItem itemMenu2 = new JMenuItem("Lista projektow");
         itemMenu2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Timer.resetCounter();
                 setVisible(false);
                 dispose();
                 mainScreen.setVisible(true);
@@ -82,15 +90,14 @@ public class ProjectManager extends JFrame {
         itemMenu3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addUser=new AddUser(user,pass);
+                mainScreen.addUser();
             }
         });
-        JMenuItem itemMenu4 = new JMenuItem("Lista uzytkownikow");
         JMenuItem itemMenu5 = new JMenuItem("Moje konto");
         itemMenu5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                user.setVisible(true);
+                user.GetWindow();
             }
         });
         JMenuItem itemMenu6 = new JMenuItem("Wyloguj");
@@ -109,7 +116,6 @@ public class ProjectManager extends JFrame {
         menu1.add(itemMenu1);
         menu1.add(itemMenu2);
         menu2.add(itemMenu3);
-        menu2.add(itemMenu4);
         menu3.add(itemMenu5);
         menu3.add(itemMenu6);
         menuBar.add(menu1);
@@ -155,7 +161,7 @@ public class ProjectManager extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //setEnabled(false);
-                user.setVisible(true);
+                user.GetWindow();
             }
         });
 
@@ -174,7 +180,7 @@ public class ProjectManager extends JFrame {
                         Object values[] = list.getSelectedValues();
                         for(int i=0,n=selection.length;i<n; i++) {
                             Object val = values[i];
-                            System.out.println(val.toString());
+                            //System.out.println(val.toString());
 
                             deleteFromTeam(val.toString());
                         }
@@ -270,9 +276,19 @@ public class ProjectManager extends JFrame {
         jpanelRight.add(jpanelRightUp,BorderLayout.PAGE_START);
         jpanelRight.add(commentsTableSP, BorderLayout.CENTER);
         jpanelFootMain.add(footer, BorderLayout.EAST);
+        jpanelFootMain.add(timerLabel,BorderLayout.WEST);
         jpanelMain.add(jpanelLeft, BorderLayout.LINE_START);
         jpanelMain.add(jpanelRight, BorderLayout.CENTER);
         jpanelMain.add(jpanelFootMain,BorderLayout.PAGE_END);
+        JFrame frame = this;
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                Timer.resetCounter();
+            }
+        });
+
 
         this.setLayout(new GridLayout(1,1));
         this.add(jpanelMain);

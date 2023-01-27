@@ -13,6 +13,7 @@ public class LogInWindow extends JFrame {
 
     LogInWindow(){
         this.setSize(350,350);
+        this.setTitle("Log In");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
@@ -53,17 +54,14 @@ public class LogInWindow extends JFrame {
 
         loginText.setSize(25, 10);
 
-        JButton loguj = new JButton("Zaloguj");
+        JButton loginButton = new JButton("Zaloguj");
 
-        Thread thread = new Thread(()->{
-           loguj.addActionListener(new ActionListener() {
+           loginButton.addActionListener(new ActionListener() {
                @Override
                public void actionPerformed(ActionEvent e) {
                    LogIn(loginText,passwordText);
                }
            });
-        });
-        thread.start();
 
         firstPanel.add(login);
         firstPanel.add(loginText);
@@ -72,7 +70,7 @@ public class LogInWindow extends JFrame {
         secondPanel.add(password);
         secondPanel.add(passwordText);
 
-        thirdPanel.add(loguj);
+        thirdPanel.add(loginButton);
 
 
 
@@ -89,18 +87,19 @@ public class LogInWindow extends JFrame {
     private void LogIn(JTextField loginText, JPasswordField passwordText){
         if(pass.getUserCredentials().containsKey(loginText.getText())){
             if(pass.getUserCredentials().get(loginText.getText()).equals(pass.getHashedPass(new String(passwordText.getPassword())))){
-                setVisible(false);
-                dispose();
                     if(pass.getUserData().get(loginText.getText())[1]!=null) {
                         if (pass.getUserData().get(loginText.getText())[1].equals("MANAGER")) {
                             MainScreen ms = new MainScreen(loginText.getText(), this, pass);
+                            setVisible(false);
+                            dispose();
                         }
-                    }else {
-                        MainScreenDev msd = new MainScreenDev(loginText.getText(), this);
+
                     }
-
-
-
+                    else if(pass.getUserData().get(loginText.getText())[0].equals("DEVELOPER")) {
+                        MainScreenDev msd = new MainScreenDev(loginText.getText(), this);
+                        setVisible(false);
+                        dispose();
+                    }
 
             }else {
                 JOptionPane.showMessageDialog(null, "Haslo niepoprawne");

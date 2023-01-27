@@ -13,7 +13,8 @@ public class ProjectDev extends JFrame {
         public boolean isCellEditable(int row, int column) {
             return false;
         }
-    };;
+    };
+    protected static JLabel timerLabel = new JLabel("Czas sesji: 60");
 
     private UserInProject userInProject;
     private CommentInProject commentInProject;
@@ -67,6 +68,7 @@ public class ProjectDev extends JFrame {
         itemMenu2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Timer.resetCounter();
                 setVisible(false);
                 dispose();
                 mainScreen.setVisible(true);
@@ -76,6 +78,7 @@ public class ProjectDev extends JFrame {
         itemMenu5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Timer.resetCounter();
                 user.setVisible(true);
             }
         });
@@ -83,13 +86,13 @@ public class ProjectDev extends JFrame {
         itemMenu6.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                saveToFile.addToFile();
+                Timer.stopThread();
                 l.setVisible(true);
                 l.loginText.setText("");
                 l.passwordText.setText("");
                 setVisible(false);
                 dispose();
-                user.setVisible(false);
-                user.dispose();
             }
         });
         menu1.add(itemMenu2);
@@ -108,6 +111,7 @@ public class ProjectDev extends JFrame {
         addComment.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Timer.resetCounter();
                 AddComment addComment = new AddComment(login, commentInProject, project.getSpecifiedProject(projectNameArea.getText()),s);
                 addComment.setVisability(true);
                 mainScreen.updateCommentsTable(projectNameArea.getText());
@@ -117,6 +121,7 @@ public class ProjectDev extends JFrame {
         deleteComment.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Timer.resetCounter();
                 int i = commentsTable.getSelectedRow();
                 String selectedUser = commentsTable.getValueAt(i,0).toString();
                 String selectedComment = commentsTable.getValueAt(i,2).toString();
@@ -132,7 +137,7 @@ public class ProjectDev extends JFrame {
         footer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //setEnabled(false);
+                Timer.resetCounter();
                 user.setVisible(true);
             }
         });
@@ -148,7 +153,7 @@ public class ProjectDev extends JFrame {
                     int col = 2;
                     TableModel model = commentsTable.getModel();
                     String rowValue = model.getValueAt(row, col).toString();
-
+                    Timer.resetCounter();
                     JOptionPane.showMessageDialog(null,rowValue);
                 }
             }
@@ -165,9 +170,48 @@ public class ProjectDev extends JFrame {
         JScrollPane commentsTableSP = new JScrollPane(commentsTable);
         commentsTableSP.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+        MouseListeners listeners = new MouseListeners();
+        addMouseListener(listeners);
+        teamList.addMouseListener(listeners);
+        commentsTable.addMouseListener(listeners);
+
+        JButton startWork = new JButton("Rozpocznij pracę");
+        startWork.setSize(new Dimension(100,20));
+        JButton endWork = new JButton("Zakończ pracę");
+        endWork.setSize(new Dimension(100,20));
+
+        startWork.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                userInProject.getUserInProject(login,project.getSpecifiedProject(projectNameArea.getText())).setStatus(1);
+                project.getSpecifiedProject(projectNameArea.getText()).setStatus("AKTYWNY");
+                statusArea.setText(project.getSpecifiedProject(projectNameArea.getText()).getStatus());
+            }
+        });
+
+        endWork.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                userInProject.getUserInProject(login,project.getSpecifiedProject(projectNameArea.getText())).setStatus(0);
+                int counter = 0;
+                for(UserInProject el : userInProject.userInProjectList){
+                    if(el.project.getName().equals(projectNameArea.getText())){
+                        counter+=el.getStatus();
+                    }
+                }
+                if(counter==0){
+                    project.getSpecifiedProject(projectNameArea.getText()).setStatus("ZAKONCZONY");
+                    statusArea.setText(project.getSpecifiedProject(projectNameArea.getText()).getStatus());
+                }
+            }
+        });
+
         Insets i = new Insets(0,0,5,0);
 
         c.insets = i;
+
+        jpanelLeft.add(startWork,BorderLayout.LINE_START);
+        jpanelLeft.add(endWork,BorderLayout.LINE_START);
 
         jpanelLeft.add(projectsLabelMain,BorderLayout.LINE_START);
 
@@ -198,6 +242,7 @@ public class ProjectDev extends JFrame {
         jpanelRight.add(jpanelRightUp,BorderLayout.PAGE_START);
         jpanelRight.add(commentsTableSP, BorderLayout.CENTER);
         jpanelFootMain.add(footer, BorderLayout.EAST);
+        jpanelFootMain.add(timerLabel,BorderLayout.WEST);
         jpanelMain.add(jpanelLeft, BorderLayout.LINE_START);
         jpanelMain.add(jpanelRight, BorderLayout.CENTER);
         jpanelMain.add(jpanelFootMain,BorderLayout.PAGE_END);

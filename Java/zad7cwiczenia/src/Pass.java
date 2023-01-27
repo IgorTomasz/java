@@ -13,7 +13,7 @@ public class Pass {
     Pass(){
         BufferedReader br = null;
         try{
-            File file = new File("D:\\Java\\zad7cwiczenia-20220516T190306Z-001\\zad7cwiczenia\\src\\data.txt");
+            File file = new File("./src/data.txt");
             br = new BufferedReader(new FileReader(file));
             String line = null;
 
@@ -24,10 +24,10 @@ public class Pass {
                 if(type.equals("PRACOWNIK")){
                     String userlogin = parts[1].trim();
                     String userPass = parts[2].trim();
-                    String userPosition1 = parts[7].trim();
+                    String userPosition1 = parts[8].trim();
                     String userPosition2 = "";
                     try{
-                        userPosition2 = parts[8].trim();
+                        userPosition2 = parts[9].trim();
                     }catch (Exception e){
 
                     }
@@ -36,9 +36,8 @@ public class Pass {
                         userPosition[0] = userPosition2;
                         userPosition[1] = userPosition1;
                     }
-                    if(userPosition2.equals("MANAGER")) {
-                        userPosition[0] = userPosition1;
-                        userPosition[1] = userPosition2;
+                    else {
+                        userPosition[0]=userPosition1;
                     }
 
                     userData.put(userlogin,userPosition);

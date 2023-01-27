@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -31,7 +32,7 @@ public class Project {
     public void getProjects(){
         BufferedReader br = null;
         try{
-            File file = new File("D:\\Java\\zad7cwiczenia-20220516T190306Z-001\\zad7cwiczenia\\src\\data.txt");
+            File file = new File(".\\src\\data.txt");
             br = new BufferedReader(new FileReader(file));
             String line = null;
 
@@ -49,7 +50,7 @@ public class Project {
                 String[] usersInArray = usersToArray.split("%");
                 String[] userArray = new String[2];
                 for(int i =0; i<usersInArray.length; i++){
-                    userArray[i]=usersInArray[i];
+                    userArray[i]=usersInArray[i].split("\\.")[0];
                 }
 
                 projectList.add(new Project(projectName,projectStatus,projectDate,projectCreatedBy,userArray));
@@ -57,7 +58,7 @@ public class Project {
                 }
             }
         }catch (Exception e){
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,"Nie znaleziono pliku z danymi","Ostrzeżenie",JOptionPane.INFORMATION_MESSAGE);
         }finally {
             if(br != null){
                 try{
@@ -253,13 +254,13 @@ public class Project {
 
     }
 
-    public String[] getProjectByStatusAndUser(String status, String login){
+    public String[] getProjectByStatusAndUser(String login){
         String[] projectArrayByStatus = null;
-        statusEnum projectStatus = statusEnum.valueOf(status);
-        if(status.equals("AKTYWNY")){
+        //statusEnum projectStatus = statusEnum.valueOf(status);
+        //if(status.equals("AKTYWNY")){
             int counter = 0;
             for (Project el : projectList) {
-                if (el.status.equals(projectStatus)) {
+                //if (el.status.equals(projectStatus)) {
                     for(int i = 0; i<el.usersArray.length;i++){
                         if(el.usersArray[i]!=null) {
                             if (el.usersArray[i].equals(login)) {
@@ -268,13 +269,13 @@ public class Project {
                         }
                     }
 
-                }
+                //}
             }
             projectArrayByStatus = new String[counter];
 
             int i = 0;
             for (Project el : projectList) {
-                if (el.status.equals(projectStatus)) {
+               // if (el.status.equals(projectStatus)) {
                     for(int j = 0; j<el.usersArray.length;j++){
                         if(el.usersArray[j]!=null) {
                             if (el.usersArray[j].equals(login)) {
@@ -284,21 +285,21 @@ public class Project {
                         }
                     }
 
-                }
+               // }
             }
 
-        }
+        //}
         return projectArrayByStatus;
     }
 
-    public String getUserArrayClear(){
+    public String getUserArrayClear(UserInProject userInProject){
         String positionString="";
         for(int i =0; i<usersArray.length;i++){
             if(usersArray[i]!=null) {
                 if(i==1){
-                    positionString += "%"+usersArray[i];
+                    positionString += "%"+usersArray[i]+"."+userInProject.getUserInProject(usersArray[1],this).getStatus();
                 }else {
-                    positionString += usersArray[i];
+                    positionString += usersArray[i]+"."+userInProject.getUserInProject(usersArray[0],this).getStatus();
                 }
             }
         }
@@ -320,5 +321,24 @@ public class Project {
 
         }
         return isIn;
+    }
+
+    public void addProjectToList(Project project){
+        boolean isNew = false;
+        for(Project el:projectList){
+            if(!el.name.equals(project.name)){
+                isNew=true;
+            }
+        }
+        if(isNew){
+            projectList.add(project);
+        }else {
+            JOptionPane.showMessageDialog(null, "Istnieje już projekt o takiej nazwie!", "Ostrzeżenie", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    public void setStatus(String status){
+        statusEnum statusE = statusEnum.valueOf(status);
+        this.status=statusE;
     }
 }

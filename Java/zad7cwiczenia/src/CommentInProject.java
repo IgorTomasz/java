@@ -32,7 +32,7 @@ public class CommentInProject {
     public void getCommentsInProject(){
         BufferedReader br = null;
         try{
-            File file = new File("D:\\Java\\zad7cwiczenia-20220516T190306Z-001\\zad7cwiczenia\\src\\data.txt");
+            File file = new File(".\\src\\data.txt");
             br = new BufferedReader(new FileReader(file));
             String line1 = null;
 
@@ -70,7 +70,7 @@ public class CommentInProject {
                 }
 
         }catch (Exception e){
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,"Nie znaleziono pliku z danymi","Ostrzeżenie",JOptionPane.INFORMATION_MESSAGE);
         }finally {
             if(br != null){
                 try{

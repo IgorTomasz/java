@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -15,8 +17,10 @@ public class User extends JFrame {
     private Status status;
     private String login;
     private String pass;
+    private String phoneNumber;
     private List<User> users = new ArrayList<>();
     private Project project = new Project(this);
+    private String MainScreenLogin;
 
     enum Position{
         DEVELOPER, MANAGER
@@ -24,35 +28,28 @@ public class User extends JFrame {
     enum Status{
         ACTIVE, INACTIVE
     }
-    User(String name, String login, String pass, String lastname, String pesel, Position[] position, Status status){
+    User(String name, String login, String pass, String lastname,String phoneNumber, String pesel, Position[] position, Status status){
         this.name=name;
         this.login=login;
         this.pass=pass;
         this.lastname=lastname;
+        this.phoneNumber=phoneNumber;
         this.pesel=pesel;
         this.position=position;
         this.status=status;
     }
 
-/*    User(String name, String login, String pass, String lastname, String pesel, Position position, Status status){
-        this.name=name;
-        this.login=login;
-        this.pass=pass;
-        this.lastname=lastname;
-        this.pesel=pesel;
-        this.position[0]=position;
-        this.status=status;
-    }*/
+
     User(String MainScreenLogin){
-        GetWindow(MainScreenLogin);
+        getUsersToList(MainScreenLogin);
+        this.MainScreenLogin=MainScreenLogin;
     }
 
-    public void GetWindow(String MainScreenLogin){
-        getUsersToList(MainScreenLogin);
+    public JDialog GetWindow(){
 
-        this.setSize(850, 250);
-        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        this.setTitle("Użytkownik");
+        JDialog main = new JDialog(this,"Użytkownik",Dialog.ModalityType.TOOLKIT_MODAL);
+        main.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        main.setSize(850,250);
 
         JPanel jpanelMain = new JPanel();
         JPanel jpanelLeft = new JPanel();
@@ -68,8 +65,13 @@ public class User extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
         jpanelRight.setLayout(new BorderLayout());
 
+        JButton saveData = new JButton("Zapisz");
+
+
+
         JLabel nameLabel = new JLabel("Imię:");
         JLabel lastNameLabel = new JLabel("Nazwisko:");
+        JLabel phoneNumberLabel = new JLabel("Numer telefonu:");
         JLabel peselLabel = new JLabel("Pesel:");
         JLabel positionLabel = new JLabel("Stanowisko:");
         JLabel statusLabel = new JLabel("Status:");
@@ -80,6 +82,8 @@ public class User extends JFrame {
         nameArea.setPreferredSize(new Dimension(100,20));
         JTextArea lastNameArea = new JTextArea(lastname);
         lastNameArea.setPreferredSize(new Dimension(100,20));
+        JTextArea phoneNumberArea = new JTextArea(phoneNumber);
+        phoneNumberArea.setPreferredSize(new Dimension(100,20));
         JTextArea peselArea = new JTextArea(pesel);
         peselArea.setEditable(false);
         peselArea.setPreferredSize(new Dimension(100,20));
@@ -97,6 +101,19 @@ public class User extends JFrame {
         radioBG.add(statusArea1);
         radioBG.add(statusArea2);
 
+        saveData.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                name=nameArea.getText();
+                nameArea.setText(name);
+                lastname=lastNameArea.getText();
+                lastNameArea.setText(lastname);
+                phoneNumber=slicePhoneNumber(phoneNumberArea.getText());
+                phoneNumberArea.setText(slicePhoneNumber(phoneNumberArea.getText()));
+                JOptionPane.showMessageDialog(null,"Pomyślnie zapisano","Informacja",JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
         String[] columnNameProjects = {"Nazwa","Status"};
 
         JTable projectsTable = new JTable(project.getProjectsInArrayMulti(MainScreenLogin),columnNameProjects){
@@ -105,15 +122,17 @@ public class User extends JFrame {
             }
         };
         projectsTable.setPreferredSize(new Dimension(500,300));
-        Insets i = new Insets(0,0,5,0);
+
 
         JScrollPane projTableScroll = new JScrollPane(projectsTable);
         projTableScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         projTableScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
+        Insets i = new Insets(0,0,7,0);
         c.insets = i;
         c.gridx=0;
         c.gridy=0;
+        c.fill=1;
         jpanelLeft.add(nameLabel,c);
         c.gridx=1;
         jpanelLeft.add(nameArea,c);
@@ -124,16 +143,26 @@ public class User extends JFrame {
         jpanelLeft.add(lastNameArea,c);
         c.gridx=0;
         c.gridy=2;
+        jpanelLeft.add(phoneNumberLabel,c);
+        c.gridx=1;
+        jpanelLeft.add(phoneNumberArea,c);
+        c.gridx=0;
+        c.gridy=3;
         jpanelLeft.add(peselLabel,c);
         c.gridx=1;
         jpanelLeft.add(peselArea,c);
+        c.gridx=1;
+        c.gridy=4;
+        c.fill = 2;
+        jpanelLeft.add(saveData,c);
         c.gridx=0;
-        c.gridy=3;
+        c.gridy=5;
+        c.fill=1;
         jpanelLeft.add(positionLabel,c);
         c.gridx=1;
         jpanelLeft.add(positoionArea,c);
         c.gridx=0;
-        c.gridy=4;
+        c.gridy=6;
         jpanelLeft.add(statusLabel,c);
         c.gridx=1;
         jpanelLeft.add(statusArea1,c);
@@ -145,16 +174,18 @@ public class User extends JFrame {
 
         jpanelMain.add(jpanelLeft, BorderLayout.LINE_START);
         jpanelMain.add(jpanelRight,BorderLayout.CENTER);
-        this.add(jpanelMain);
 
-
-        this.setLocationRelativeTo(null);
+        main.add(jpanelMain);
+        main.setLocationRelativeTo(null);
+        main.setVisible(true);
+        return main;
     }
+
 
     public void getUsersToList(String MainScreenLogin){
         BufferedReader br = null;
         try{
-            File file = new File("D:\\Java\\zad7cwiczenia-20220516T190306Z-001\\zad7cwiczenia\\src\\data.txt");
+            File file = new File(".\\src\\data.txt");
             br = new BufferedReader(new FileReader(file));
             String line = null;
 
@@ -168,13 +199,14 @@ public class User extends JFrame {
                 String userPass = parts[2].trim();
                 String userName = parts[3].trim();
                 String userLastName = parts[4].trim();
-                String userPesel = parts[5].trim();
-                Status userStatus = Status.valueOf(parts[6].trim());
+                String userPhoneNumber = parts[5].trim();
+                String userPesel = parts[6].trim();
+                Status userStatus = Status.valueOf(parts[7].trim());
                 Position[] userPosition = new Position[2];
-                userPosition[0]=Position.valueOf(parts[7].trim());
+                userPosition[0]=Position.valueOf(parts[8].trim());
                         try{
                             if(parts[7].trim()!=null){
-                                userPosition[1]=Position.valueOf(parts[8].trim());
+                                userPosition[1]=Position.valueOf(parts[9].trim());
                             }
                         }catch (Exception e){
 
@@ -183,13 +215,14 @@ public class User extends JFrame {
                             this.login=userlogin;
                             this.pass=userPass;
                             this.name=userName;
+                            this.phoneNumber=userPhoneNumber;
                             this.lastname=userLastName;
                             this.pesel=userPesel;
                             this.position=userPosition;
                             this.status=userStatus;
                             users.add(this);
                         }else {
-                            users.add(new User(userName, userlogin, userPass, userLastName, userPesel, userPosition, userStatus));
+                            users.add(new User(userName, userlogin, userPass, userLastName, slicePhoneNumber(userPhoneNumber), userPesel, userPosition, userStatus));
                         }
 
                 }
@@ -204,6 +237,26 @@ public class User extends JFrame {
                 }
             }
         }
+    }
+
+
+    public String slicePhoneNumber(String pn){
+        String newPhone = "";
+        newPhone+=pn.charAt(0);
+        if(!pn.contains("-")) {
+            for (int i = 1; i < pn.length(); i++) {
+                if (i % 3 == 0) {
+                    newPhone += '-';
+                    newPhone += pn.charAt(i);
+                }
+                if (i % 3 != 0) {
+                    newPhone += pn.charAt(i);
+                }
+            }
+        }else {
+            newPhone=pn;
+        }
+        return newPhone;
     }
 
     public String[][] getUsersInArray(){
@@ -250,6 +303,10 @@ public class User extends JFrame {
 
     public String getPesel(){
         return pesel;
+    }
+
+    public String getPhoneNumber(){
+        return phoneNumber;
     }
 
     public User getSpecifiedUser(String login){
@@ -300,7 +357,7 @@ public class User extends JFrame {
                 "name='" + name + '\'' +
                 '}';
     }
-    public boolean addUserToList(User user){
+    public boolean addUserToList(User user, JDialog main){
         boolean isAdded = false;
         boolean isNew = true;
         for (User el : users){
@@ -313,7 +370,7 @@ public class User extends JFrame {
             users.add(user);
             isAdded=true;
         }else {
-            JOptionPane.showMessageDialog(null,"Istnieje już użytkownik z takim loginem");
+            JOptionPane.showMessageDialog(main,"Istnieje już użytkownik z takim loginem");
         }
         return isAdded;
     }
