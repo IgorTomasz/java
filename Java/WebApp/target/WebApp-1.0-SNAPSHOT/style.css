@@ -1,0 +1,43 @@
+body{
+    background-color: #93B1A7;
+    margin: auto;
+    text-align: center;
+}
+
+a{
+  text-decoration: none;
+    color: brown;
+}
+input{
+    border-radius: 50px;
+}
+input[type=submit]{
+
+}
+.subbut {
+    border-radius: 30px;
+    border-style: solid;
+    width: 200px;
+    height: 60px;
+    background-color: #99C2A2;
+    color: black;
+    font-family: Cambria, serif;
+    font-size: 25px;
+}
+
+.login_form{
+    border-style: solid;
+    width: 25%;
+    height: 20%;
+    margin: auto auto 15px;
+    background-color: #99C2A2;
+    color: black;
+    font-family: Cambria, serif;
+    border-radius: 25px;
+}
+
+img{
+    width: 250px;
+    height: 250px;
+    padding-bottom: -30px;
+}

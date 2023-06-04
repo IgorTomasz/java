@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sun Jun 04 15:10:24 CEST 2023:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0188-8687-c2dc-0000033fa0f0 
+on database directory D:\Java\WebApp\apache-tomcat-11.0.0-M6\bin\DbForBooks with class loader java.net.URLClassLoader@133e16fd 
+Loaded from file:/D:/Java/WebApp/apache-tomcat-11.0.0-M6/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=19.0.2+7-44
+user.dir=D:\Java\WebApp\apache-tomcat-11.0.0-M6\bin
+os.name=Windows 11
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
